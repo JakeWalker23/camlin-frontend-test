@@ -1,0 +1,14 @@
+
+
+
+Camlin Logo Blue: #3C9FE2
+
+Camlin darker Blue (CTA): #449ED8
+
+Camlin White: #FFFFFF
+
+
+Camlin Font: "Avenir LT W01_65 Medium1475532";
+
+
+

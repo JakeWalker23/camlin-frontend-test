@@ -1,0 +1,42 @@
+{
+  "name": "camlin-frontend-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small UI to visualise voltage readings",
+  "author": {
+    "name": "Jake Walker"
+  },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "dev": "npm run dev",
+    "test": "npm run test"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "@vue/test-utils": "^2.0.0-0",
+    "@vue/vue3-jest": "^27.0.0-alpha.1",
+    "autoprefixer": "^10.4.21",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.5",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.10"
+  },
+  "_id": "camlin-frontend-test@1.0.0",
+  "bugs": {
+    "url": "https://github.com/JakeWalker23/camlin-frontend-test/issues"
+  },
+  "homepage": "https://github.com/JakeWalker23/camlin-frontend-test#readme",
+  "license": "ISC",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JakeWalker23/camlin-frontend-test.git"
+  }
+}
