@@ -1,25 +1,20 @@
 <template>
-  <h2>Voltage Readings</h2>
-  <p>Readings from 23/06/2024 </p>
-      <main class="min-h-screen bg-black p-8">
-    <AssetTable :assets="readings" />
-  </main>
+  <div id="app" class="min-h-screen bg-white p-6">
+    <!-- Keep your global header if you like -->
+    <header class="mb-6 text-center">
+      <h1 class="text-2xl font-semibold text-gray-900">
+        Transformers Dashboard
+      </h1>
+      <p class="text-sm text-gray-600">
+        Monitor transformer health and readings
+      </p>
+    </header>
 
+    <!-- This is the key: let the router decide what to render -->
+    <router-view />
+  </div>
 </template>
 
 <script setup>
-import AssetTable from '@/components/AssetTable.vue'
-import readings from "@/data/readings.json"
-
+// No need to import AssetTable, filters, etc. here anymore
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

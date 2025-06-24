@@ -1,20 +1,27 @@
 <template>
-  <div class="bg-zinc-900 text-white rounded-xl shadow-md p-4">
-    <div class="text-xl font-semibold mb-4">Assets</div>
-    <div class="divide-y divide-zinc-700">
+  <div class="mx-auto w-full md:w-[70%] mt-2">
+    <div class="bg-gray-900 rounded-lg divide-y divide-gray-800 overflow-hidden">
       <AssetRow
         v-for="asset in assets"
         :key="asset.assetId"
         :asset="asset"
+        :is-menu-open="openMenuAssetId === asset.assetId"
+        @toggle-menu="toggleMenu"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import AssetRow from './AssetRow.vue'
+import { defineProps, defineEmits } from 'vue';
+import AssetRow from './AssetRow.vue';
 
 const props = defineProps({
-  assets: Array
-})
+  assets: { type: Array, required: true },
+  openMenuAssetId: { type: [Number, String, null], default: null }
+});
+const emit = defineEmits(['toggle-menu']);
+function toggleMenu(id) {
+  emit('toggle-menu', id);
+}
 </script>
