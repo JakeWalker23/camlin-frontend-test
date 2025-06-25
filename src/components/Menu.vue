@@ -18,7 +18,6 @@
   </div>
 </template>
 <script setup>
-// No imports of Menu.vue here—this is the leaf component, so it only defines props.
 import { defineProps } from 'vue';
 
 const props = defineProps({

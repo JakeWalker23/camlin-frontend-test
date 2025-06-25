@@ -4,7 +4,7 @@ import GraphView from '@/views/GraphView.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
-  { path: '/graph/:id', name: 'Graph', component: GraphView, props: true }
+  { path: '/graph/:id',   name: 'Graph', component: GraphView, props: true }
 ];
 
 const router = createRouter({

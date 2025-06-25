@@ -8,7 +8,7 @@
         <label
           v-for="asset in assets"
           :key="asset.assetId"
-          class="inline-flex items-center text-sm text-white"
+          class="inline-flex items-center text-sm text-white cursor-pointer"
         >
           <input
             type="checkbox"
@@ -33,25 +33,24 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineComponent } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import VueApexCharts from 'vue3-apexcharts';
 import data from '@/data/readings.json';
 
-// Register the ApexCharts component locally
-defineComponent({ components: { apexchart: VueApexCharts } });
+// 1. Load all assets internally
+const assets = data;
 
-const assets = ref([]);
-const selectedIds = ref([]);
+// 2. Grab the `id` param from the URL
+const route = useRoute();
+const clickedId = parseInt(route.params.id, 10);
 
-onMounted(() => {
-  assets.value = data;
-  // Initially select all transformers
-  selectedIds.value = data.map(a => a.assetId);
-});
+// 3. Initialize selection to just that one
+const selectedIds = ref([clickedId]);
 
-// Build the full series array
+// 4. Build series for every asset
 const allSeries = computed(() =>
-  assets.value.map(asset => ({
+  assets.map(asset => ({
     name: asset.name,
     data: asset.lastTenVoltgageReadings.map(r => [
       new Date(r.timestamp).getTime(),
@@ -60,35 +59,26 @@ const allSeries = computed(() =>
   }))
 );
 
-// Filter series based on selectedIds
+// 5. Filter by the checkboxes
 const filteredSeries = computed(() =>
-  allSeries.value.filter((s, idx) =>
-    selectedIds.value.includes(assets.value[idx].assetId)
+  allSeries.value.filter((_, idx) =>
+    selectedIds.value.includes(assets[idx].assetId)
   )
 );
 
-// Chart configuration
+// 6. ApexCharts config (dark theme, time axis, etc.)
 const chartOptions = {
-  chart: {
-    id: 'voltage-chart',
-    toolbar: { show: false }
-  },
+  chart: { id: 'voltage-chart', toolbar: { show: false } },
   theme: { mode: 'dark' },
   stroke: { curve: 'smooth', width: 2 },
-  xaxis: {
-    type: 'datetime',
-    labels: { style: { colors: '#bbb' } }
-  },
-  yaxis: {
-    labels: { style: { colors: '#bbb' } }
-  },
+  xaxis: { type: 'datetime', labels: { style: { colors: '#bbb' } } },
+  yaxis: { labels: { style: { colors: '#bbb' } } },
   legend: { show: true, labels: { colors: '#fff' } },
   tooltip: { enabled: true }
 };
 </script>
 
 <style scoped>
-/* Ensure checkboxes match dark theme */
 .form-checkbox {
   accent-color: #3C9FE2;
 }
