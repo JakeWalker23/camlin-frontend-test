@@ -1,9 +1,9 @@
 <template>
   <div class="mx-auto w-full md:w-[70%] mt-8 bg-gray-900 rounded-lg p-6">
-    <!-- Panel Header -->
+
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-semibold text-white">Voltage Over Time</h2>
-      <!-- Transformer checkboxes -->
+
       <div class="flex space-x-4">
         <label
           v-for="asset in assets"
@@ -16,12 +16,11 @@
             :value="asset.assetId"
             class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600 rounded"
           />
-          <span class="ml-2 truncate" style="max-width: 6rem;">{{ asset.name }}</span>
+          <span class="ml-2 truncate" style="max-width: 6rem;">{{ asset.name.replace('Transformer', ' ') }}</span>
         </label>
       </div>
     </div>
 
-    <!-- Chart -->
     <apexchart
       type="line"
       height="320"
@@ -38,17 +37,13 @@ import { useRoute } from 'vue-router';
 import VueApexCharts from 'vue3-apexcharts';
 import data from '@/data/readings.json';
 
-// 1. Load all assets internally
 const assets = data;
 
-// 2. Grab the `id` param from the URL
 const route = useRoute();
 const clickedId = parseInt(route.params.id, 10);
 
-// 3. Initialize selection to just that one
 const selectedIds = ref([clickedId]);
 
-// 4. Build series for every asset
 const allSeries = computed(() =>
   assets.map(asset => ({
     name: asset.name,
@@ -59,14 +54,12 @@ const allSeries = computed(() =>
   }))
 );
 
-// 5. Filter by the checkboxes
 const filteredSeries = computed(() =>
   allSeries.value.filter((_, idx) =>
     selectedIds.value.includes(assets[idx].assetId)
   )
 );
 
-// 6. ApexCharts config (dark theme, time axis, etc.)
 const chartOptions = {
   chart: { id: 'voltage-chart', toolbar: { show: false } },
   theme: { mode: 'dark' },

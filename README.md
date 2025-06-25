@@ -1,24 +1,24 @@
 # camlin-frontend-test
 
-## Project setup
+A User Inteface to visualise transformer data (JSON) and visualise it over time through a line graph. 
+
+
+## Running with Docker
+
+```
+docker build -t camlin-frontend .
+docker run -p 8080:80 camlin-frontend
+```
+
+- You will see the application running on: http://localhost:8080
+
+
+
+
+
+## Project setup locally
 ```
 pnpm install
-```
-
-### Compiles and hot-reloads for development
-```
 pnpm run serve
-```
-
-### Compiles and minifies for production
-```
 pnpm run build
 ```
-
-### Run your unit tests
-```
-pnpm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
