@@ -11,15 +11,9 @@ Camlin White: #FFFFFF
 Camlin Font: "Avenir LT W01_65 Medium1475532";
 
 
-
-
-
-[ ] Add dark / Light mode
-
-[ ] Add maps for transformers 
-
 [ ] Fix Date Filter
 
-[ ] Wire in buttons on Data row to new page
 
- 
+[ ] Wire in Dark mode toggle 
+
+[ ] Wire in buttons on Data row to new page
