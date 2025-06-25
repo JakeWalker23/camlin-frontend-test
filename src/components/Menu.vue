@@ -5,11 +5,12 @@
   >
     <ul>
       <li
-        v-for="(action, idx) in props.actions"
+        v-for="(action, idx) in actions"
         :key="idx"
+        @click="goToGraph"
         :class="[
           'px-4 py-2 hover:bg-gray-100 cursor-pointer',
-          idx === props.separatorIndex ? 'border-t border-gray-200' : ''
+          idx === separatorIndex ? 'border-t border-gray-200' : ''
         ]"
       >
         {{ action }}
@@ -17,17 +18,28 @@
     </ul>
   </div>
 </template>
+
 <script setup>
 import { defineProps } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
+  assetId: {
+    type: [String, Number],
+    required: true
+  },
   actions: {
     type: Array,
-    default: () => ['Instant Rollback', 'Promote', 'Redeploy']
+    default: () => ['View Graph', 'Test', 'Test']
   },
   separatorIndex: {
     type: Number,
     default: 2
   }
 });
+
+const router = useRouter();
+function goToGraph() {
+  router.push({ name: 'Graph', params: { id: props.assetId } });
+}
 </script>

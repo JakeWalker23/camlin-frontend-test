@@ -30,7 +30,7 @@
         </svg>
       </button>
 
-      <Menu v-if="isMenuOpen" :actions="['Instant Rollback','Promote','Redeploy']" :separatorIndex="2"/>
+      <Menu v-if="isMenuOpen" :asset-id="asset.assetId" :actions="['View Graph','Test','Test']" :separatorIndex="2"/>
     </div>
   </div>
 </template>

@@ -1,88 +1,191 @@
+<!-- src/components/DateFilter.vue -->
 <template>
   <div class="relative inline-block text-left">
-    <!-- Trigger button -->
+    <!-- Trigger -->
     <button
+      ref="trigger"
       @click="open = !open"
       class="px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded flex items-center space-x-2"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-           viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10m-13 4h16m-7 4h7"/>
-      </svg>
+
+    <img :src="Calender" alt="Calendar" class="w-5 h-5 text-gray-300" />
       <span>Select Date Range</span>
     </button>
 
     <!-- Popover -->
-    <div
-      v-if="open"
-      class="absolute z-20 mt-2 w-64 bg-gray-800 text-black rounded shadow-lg p-4"
-    >
-      <div class="space-y-4">
-        <!-- Start -->
-        <div>
-          <label class="block text-xs font-medium text-white">Start</label>
-          <input
-            type="datetime-local"
-            v-model="local.start"
-            class="mt-1 w-full px-3 py-2 border rounded text-sm"
-          />
+    <transition name="fade">
+      <div
+        v-show="open"
+        ref="popover"
+        class="absolute z-50 mt-2 w-60 bg-gray-800 text-white rounded-lg shadow-lg p-4"
+      >
+        <!-- 1) Header with Month + Year -->
+        <div class="flex items-center justify-between mb-2">
+          <button @click="prevMonth" class="text-gray-300 hover:text-white">←</button>
+          <span class="font-medium">
+            {{ monthNames[currentMonth] }} {{ currentYear }}
+          </span>
+          <button @click="nextMonth" class="text-gray-300 hover:text-white">→</button>
         </div>
 
-        <!-- End -->
-        <div>
-          <label class="block text-xs font-medium text-white">End</label>
-          <input
-            type="datetime-local"
-            v-model="local.end"
-            class="mt-1 w-full px-3 py-2 border rounded text-sm"
-          />
+        <!-- 2) Weekday labels -->
+        <div class="grid grid-cols-7 text-xs text-gray-400 mb-1">
+          <div v-for="wd in weekDays" :key="wd">{{ wd }}</div>
         </div>
 
-        <!-- Actions -->
-        <div class="flex justify-end space-x-2">
-          <button @click="cancel" class="px-3 py-1 text-sm text-white">Cancel</button>
-          <button @click="apply" class="px-3 py-1 bg-blue-600 text-white rounded text-sm">Apply</button>
+        <!-- 3) Day grid -->
+        <div class="grid grid-cols-7 gap-0.5">
+          <div
+            v-for="(day, idx) in calendarDays"
+            :key="idx"
+            class="h-8 flex items-center justify-center rounded cursor-pointer text-sm"
+            :class="{
+              'bg-blue-600 text-white': isInRange(day),
+              'hover:bg-gray-700': day
+            }"
+          >
+            <span v-if="day" @click="onClickDate(day)">{{ day }}</span>
+          </div>
+        </div>
+
+        <!-- 4) Start / End inputs -->
+        <div class="mt-3 space-y-3">
+          <div>
+            <label class="block text-xs">Start</label>
+            <input
+              type="datetime-local"
+              v-model="local.start"
+              class="mt-1 w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-sm text-white"
+            />
+          </div>
+          <div>
+            <label class="block text-xs">End</label>
+            <input
+              type="datetime-local"
+              v-model="local.end"
+              class="mt-1 w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-sm text-white"
+            />
+          </div>
+        </div>
+
+        <!-- 5) Actions -->
+        <div class="mt-4 flex justify-end space-x-2">
+          <button @click="cancel" class="px-3 py-1 text-sm text-gray-300 hover:text-white">
+            Cancel
+          </button>
+          <button @click="apply" class="px-3 py-1 bg-blue-600 text-sm rounded hover:bg-blue-700">
+            Apply
+          </button>
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount, defineProps, defineEmits } from 'vue';
+import Calender from '@/assets/Calender.svg'
 
-// v-model value: { start: string, end: string }
 const props = defineProps({
-  modelValue: {
-    type: Object,
-    default: () => ({ start: '', end: '' })
-  }
+  modelValue: { type: Object, default: () => ({ start: '', end: '' }) }
 });
 const emit = defineEmits(['update:modelValue']);
 
-const open = ref(false);
+const open     = ref(false);
+const local    = ref({ ...props.modelValue });
+watch(() => props.modelValue, v => (local.value = { ...v }));
 
-// Local copy so we don't emit on every change
-const local = ref({ start: props.modelValue.start, end: props.modelValue.end });
+// calendar refs & state
+const trigger     = ref(null), popover = ref(null);
+const today       = new Date();
+const currentYear = ref(today.getFullYear());
+const currentMonth= ref(today.getMonth());
 
-// Keep local in sync if parent resets the modelValue
-watch(
-  () => props.modelValue,
-  (nv) => {
-    local.value = { start: nv.start, end: nv.end };
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const weekDays   = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+const calendarDays = computed(() => {
+  const firstDay   = new Date(currentYear.value, currentMonth.value, 1).getDay();
+  const daysInMonth= new Date(currentYear.value, currentMonth.value+1, 0).getDate();
+  const pad        = Array(firstDay).fill(null);
+  const days       = Array.from({ length: daysInMonth }, (_, i) => i+1);
+  return [...pad, ...days];
+});
+
+// navigation
+function prevMonth() {
+  if (currentMonth.value === 0) {
+    currentMonth.value = 11;
+    currentYear.value--;
+  } else {
+    currentMonth.value--;
   }
-);
+}
+function nextMonth() {
+  if (currentMonth.value === 11) {
+    currentMonth.value = 0;
+    currentYear.value++;
+  } else {
+    currentMonth.value++;
+  }
+}
 
+// date selection
+function onClickDate(day) {
+  const dt = new Date(currentYear.value, currentMonth.value, day);
+  if (!local.value.start || (local.value.start && local.value.end)) {
+    local.value.start = toDateTimeLocal(dt);
+    local.value.end = '';
+  } else {
+    local.value.end = toDateTimeLocal(dt);
+  }
+}
+
+// highlight
+function isInRange(day) {
+  if (!day) return false;
+  const y = currentYear.value, m = currentMonth.value;
+  const val = new Date(y,m,day).setHours(0,0,0,0);
+  const start = local.value.start ? new Date(local.value.start).setHours(0,0,0,0) : null;
+  const end   = local.value.end   ? new Date(local.value.end).setHours(0,0,0,0)   : null;
+  return start && end ? val >= start && val <= end : val === start;
+}
+
+// apply / cancel
 function apply() {
-  // Only emit when user clicks Apply
   emit('update:modelValue', { ...local.value });
   open.value = false;
 }
-
 function cancel() {
-  // revert and close
-  local.value = { start: props.modelValue.start, end: props.modelValue.end };
+  local.value = { ...props.modelValue };
   open.value = false;
 }
+
+// iso → local input format
+function toDateTimeLocal(d) {
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// click-outside
+function onClickOutside(e) {
+  if (open.value &&
+      !popover.value.contains(e.target) &&
+      !trigger.value.contains(e.target)
+  ) open.value = false;
+}
+onMounted(() => document.addEventListener('click', onClickOutside));
+onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
 </script>
+
+<style scoped>
+/* popover fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .2s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

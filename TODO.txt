@@ -11,9 +11,11 @@ Camlin White: #FFFFFF
 Camlin Font: "Avenir LT W01_65 Medium1475532";
 
 
-[ ] Fix Date Filter
-
 
 [ ] Wire in Dark mode toggle 
 
-[ ] Wire in buttons on Data row to new page
+[ ] Calender clicks too tight
+
+[ ] Decide over Data row 
+
+[ ] Maps?
