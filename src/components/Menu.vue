@@ -39,6 +39,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
+
 function goToGraph() {
   router.push({ name: 'Graph', params: { id: props.assetId } });
 }

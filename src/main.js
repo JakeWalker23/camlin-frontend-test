@@ -9,7 +9,7 @@ import 'v-calendar/dist/style.css'
 createApp(App)
   .use(router)
   .use(VCalendar, {
-    componentPrefix: 'vc' // <vc-date-picker> now available
+    componentPrefix: 'vc'
   })
   .component('apexchart', VueApexCharts)
   .mount('#app');

@@ -92,14 +92,12 @@ function selectOption(opt) {
   emit('update:modelValue', next);
 }
 
-// close when clicking outside
 function onClickOutside(e) {
   if (!e.target.closest('.status-filter')) open.value = false;
 }
 onMounted(() => document.addEventListener('click', onClickOutside));
 onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
 
-// Map statuses to dot colors
 const dotColorMap = {
   Excellent: 'bg-blue-400',
   Good:      'bg-green-400',

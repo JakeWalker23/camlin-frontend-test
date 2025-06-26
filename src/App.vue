@@ -8,18 +8,8 @@
         Monitor transformer health and readings
       </p>
 
-      <br/>
-      <br/>
-      
-      <DarkMode />
-
     </header>
 
     <router-view />
   </div>
 </template>
-
-<script setup>
-import DarkMode from '@/components/DarkMode.vue';
-
-</script>

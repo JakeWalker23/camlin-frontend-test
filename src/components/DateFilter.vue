@@ -1,7 +1,5 @@
-<!-- src/components/DateFilter.vue -->
 <template>
   <div class="relative inline-block text-left">
-    <!-- Trigger -->
     <button
       ref="trigger"
       @click="open = !open"
@@ -12,14 +10,13 @@
       <span>Select Date Range</span>
     </button>
 
-    <!-- Popover -->
     <transition name="fade">
       <div
         v-show="open"
         ref="popover"
         class="absolute z-50 mt-2 w-60 bg-gray-800 text-white rounded-lg shadow-lg p-4"
       >
-        <!-- 1) Header with Month + Year -->
+
         <div class="flex items-center justify-between mb-2">
           <button @click="prevMonth" class="text-gray-300 hover:text-white">←</button>
           <span class="font-medium">
@@ -28,12 +25,10 @@
           <button @click="nextMonth" class="text-gray-300 hover:text-white">→</button>
         </div>
 
-        <!-- 2) Weekday labels -->
         <div class="grid grid-cols-7 text-xs text-gray-400 mb-1">
           <div v-for="wd in weekDays" :key="wd">{{ wd }}</div>
         </div>
 
-        <!-- 3) Day grid -->
         <div class="grid grid-cols-7 gap-0.5">
           <div
             v-for="(day, idx) in calendarDays"
@@ -43,12 +38,12 @@
               'bg-blue-600 text-white': isInRange(day),
               'hover:bg-gray-700': day
             }"
+            @click="day && onClickDate(day)"
           >
-            <span v-if="day" @click="onClickDate(day)">{{ day }}</span>
+            <span v-if="day">{{ day }}</span>
           </div>
         </div>
 
-        <!-- 4) Start / End inputs -->
         <div class="mt-3 space-y-3">
           <div>
             <label class="block text-xs">Start</label>
@@ -68,7 +63,6 @@
           </div>
         </div>
 
-        <!-- 5) Actions -->
         <div class="mt-4 flex justify-end space-x-2">
           <button @click="cancel" class="px-3 py-1 text-sm text-gray-300 hover:text-white">
             Cancel
@@ -95,7 +89,6 @@ const open     = ref(false);
 const local    = ref({ ...props.modelValue });
 watch(() => props.modelValue, v => (local.value = { ...v }));
 
-// calendar refs & state
 const trigger     = ref(null), popover = ref(null);
 const today       = new Date();
 const currentYear = ref(today.getFullYear());
@@ -112,7 +105,6 @@ const calendarDays = computed(() => {
   return [...pad, ...days];
 });
 
-// navigation
 function prevMonth() {
   if (currentMonth.value === 0) {
     currentMonth.value = 11;
@@ -130,7 +122,6 @@ function nextMonth() {
   }
 }
 
-// date selection
 function onClickDate(day) {
   const dt = new Date(currentYear.value, currentMonth.value, day);
   if (!local.value.start || (local.value.start && local.value.end)) {
@@ -141,7 +132,6 @@ function onClickDate(day) {
   }
 }
 
-// highlight
 function isInRange(day) {
   if (!day) return false;
   const y = currentYear.value, m = currentMonth.value;
@@ -151,7 +141,6 @@ function isInRange(day) {
   return start && end ? val >= start && val <= end : val === start;
 }
 
-// apply / cancel
 function apply() {
   emit('update:modelValue', { ...local.value });
   open.value = false;
@@ -161,13 +150,11 @@ function cancel() {
   open.value = false;
 }
 
-// iso → local input format
 function toDateTimeLocal(d) {
   const pad = n => String(n).padStart(2,'0');
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-// click-outside
 function onClickOutside(e) {
   if (open.value &&
       !popover.value.contains(e.target) &&
@@ -179,7 +166,6 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
 </script>
 
 <style scoped>
-/* popover fade */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity .2s;
