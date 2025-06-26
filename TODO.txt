@@ -1,0 +1,16 @@
+TODO
+
+
+
+
+[ ] Make data ingestion an api
+
+    [ ] use fast api
+
+    [ ] Add to dockerfile
+
+    [ ] Add to instructions
+
+    [ ] Use in Pinia
+
+[ ] Fix CI build
