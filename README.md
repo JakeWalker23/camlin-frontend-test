@@ -18,6 +18,9 @@ VUE_APP_JWT_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 VUE_APP_API_URL="https://www.api.com"
 
 
+The secrets will have been sent via a one time secret link via email.
+
+
 ## Running with Docker
 
 ```
