@@ -8,7 +8,6 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import data from '@/data/readings.json';
 import Graph from '@/components/Graph.vue';
 
 const route  = useRoute();

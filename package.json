@@ -9,14 +9,16 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "dev": "npm run dev",
-    "test": "npm run test"
+    "dev": "npm run dev"
   },
   "main": "index.js",
   "dependencies": {
+    "@vueuse/core": "^13.4.0",
+    "@vue/cli-service": "~5.0.0",
     "flatpickr": "^4.6.13",
+    "jsonwebtoken": "^9.0.2",
     "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.3.0",
     "v-calendar": "^3.1.2",
     "vue": "^3.2.13",
     "vue-flatpickr-component": "^12.0.0",
@@ -25,10 +27,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10",
-    "@vue/cli-plugin-unit-jest": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "@vue/test-utils": "^2.0.0-0",
-    "@vue/vue3-jest": "^27.0.0-alpha.1",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.5",
@@ -45,5 +43,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JakeWalker23/camlin-frontend-test.git"
-  }
+  },
+  "type": "module"
 }

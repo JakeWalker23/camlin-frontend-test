@@ -6,13 +6,13 @@
 
       <div class="flex space-x-4">
         <label
-          v-for="asset in assets"
+          v-for="asset in data.assets"
           :key="asset.assetId"
           class="inline-flex items-center text-sm text-white cursor-pointer"
         >
           <input
             type="checkbox"
-            v-model="selectedIds"
+            v-model="ui.chartSelections"
             :value="asset.assetId"
             class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600 rounded"
           />
@@ -32,12 +32,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import VueApexCharts from 'vue3-apexcharts';
-import data from '@/data/readings.json';
+import  { useDataStore } from '@/stores/useDataStore'
+import  { useUiStore } from '@/stores/useUIStore'
 
-const assets = data;
+const data = useDataStore()
+const ui = useUiStore()
 
 const route = useRoute();
 const clickedId = parseInt(route.params.id, 10);
@@ -45,7 +47,7 @@ const clickedId = parseInt(route.params.id, 10);
 const selectedIds = ref([clickedId]);
 
 const allSeries = computed(() =>
-  assets.map(asset => ({
+  data.assets.map(asset => ({
     name: asset.name,
     data: asset.lastTenVoltgageReadings.map(r => [
       new Date(r.timestamp).getTime(),
@@ -56,7 +58,7 @@ const allSeries = computed(() =>
 
 const filteredSeries = computed(() =>
   allSeries.value.filter((_, idx) =>
-    selectedIds.value.includes(assets[idx].assetId)
+    ui.chartSelections.includes(data.assets[idx].assetId)
   )
 );
 
@@ -69,6 +71,14 @@ const chartOptions = {
   legend: { show: true, labels: { colors: '#fff' } },
   tooltip: { enabled: true }
 };
+
+onMounted(() => {
+  data.fetchAssets()
+  
+  if (!ui.chartSelections.length && !isNaN(clickedId)) {
+    ui.chartSelections = [clickedId]
+  }
+});
 </script>
 
 <style scoped>
